@@ -13,7 +13,11 @@ export const Searchbar = ({ onSearch }) => {
       alert('Please, enter your search query.');
       return;
     }
-    setValue(normQuery);
+    setValue('');
+  };
+
+  const handleChange = e => {
+    setValue(e.target.value);
   };
 
   return (
@@ -29,6 +33,8 @@ export const Searchbar = ({ onSearch }) => {
           autoComplete="off"
           autoFocus
           placeholder="Search images and photos"
+          value={value}
+          onChange={handleChange}
         />
       </form>
     </header>
