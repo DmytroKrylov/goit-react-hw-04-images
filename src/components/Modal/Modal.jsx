@@ -1,40 +1,38 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import css from './Modal.module.css';
+import { useEffect } from 'react';
 
-export class Modal extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.onKeydownEsc);
-  }
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onKeydownEsc);
-  }
-  onKeydownEsc = e => {
-    if (e.code === 'Escape') {
-      this.props.onClose();
-    }
-  };
+export const Modal = ({ onClose, src, alt }) => {
+  useEffect(() => {
+    const onKeydownEsc = e => {
+      if (e.code === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', onKeydownEsc);
+    return () => window.removeEventListener('keydown', onKeydownEsc);
+  });
 
-  onCloseByBackdrop = e => {
+  const onCloseByBackdrop = e => {
     if (e.target === e.currentTarget) {
-      this.props.onClose();
+      onClose();
     }
   };
-  render() {
-    return (
-      <div onClick={this.onCloseByBackdrop} className={css.overlay}>
-        <div className={css.modal}>
-          <button
-            className={css.buttonClose}
-            type="button"
-            onClick={this.onCloseByBackdrop}
-          ></button>
-          <img src={this.props.src} alt={this.props.alt} />
-        </div>
+
+  return (
+    <div onClick={onCloseByBackdrop} className={css.overlay}>
+      <div className={css.modal}>
+        <button
+          className={css.buttonClose}
+          type="button"
+          onClick={onCloseByBackdrop}
+        ></button>
+        <img src={src} alt={alt} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
 Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
   src: PropTypes.string.isRequired,
